@@ -1,59 +1,21 @@
-variable "Octopus.Aws.Regions" {
-    value "us-east-2" {
-        action = ["create-namespace-if-not-exists"]
-    }
+variable "Octopus.Azure.Account" {
+    type = "AzureAccount"
 
-    value "us-east-2" {
-        action = ["create-namespace-if-not-exists"]
-    }
+    value "octopub-yaml" {}
 }
 
-variable "Project.CleanedEnvironmentName" {
-    value "#{Octopus.Environment.Name | Replace \"[^a-zA-Z]+\" \"-\" | ToLower}" {}
-}
-
-variable "Project.CleanedSpaceName" {
-    value "#{Octopus.Space.Name | Replace \"[^a-zA-Z]+\" \"-\" | ToLower}" {}
-}
-
-variable "Project.Cluster.Namespace" {
-    value "#{Project.CleanedSpaceName}-#{Project.CleanedEnvironmentName}" {}
-}
-
-variable "Project.Database.ConnectionString" {
-    value "jdbc:mysql://#{Project.Database.Server.Name}:3306/#{Project.Database.Name}?useUnicode=true&permitMysqlScheme=true&useSSL=true&trustServerCertificate=true" {}
-}
-
-variable "Project.Database.Name" {
-    value "#{Project.CleanedSpaceName | Replace \"-\" \"_\"}_#{Project.CleanedEnvironmentName | Replace \"-\" \"_\"}_octopub" {}
-}
-
-variable "Project.Database.Server.Name" {
-    value "demo-mysql.cxcrigjhcqzb.us-east-2.rds.amazonaws.com" {}
-}
-
-variable "Project.Host.Name" {
-    value "octopub.development.octopusdemos.com" {
-        environment = ["development"]
-    }
-
-    value "octopub.octopusdemos.com" {
-        environment = ["production"]
-    }
-
-    value "octopub.test.octopusdemos.com" {
-        environment = ["test"]
-    }
+variable "Project.Container.Tag" {
+    value "#{Octopus.Action.Package[octopub-frontend].PackageVersion}" {}
 }
 
 variable "Project.Worker.Pool" {
     type = "WorkerPool"
 
-    value "aws-worker-pool" {}
+    value "azure-worker-pool" {}
 }
 
 variable "spec:rules:0:host" {
-    value "#{Project.Host.Name}" {
+    value "#{Octopub.Yaml.Host.Name}" {
         action = ["deploy-ingress"]
     }
 }
