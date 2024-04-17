@@ -43,22 +43,27 @@ step "deploy-frontend-deployment" {
     action {
         action_type = "Octopus.KubernetesDeployRawYaml"
         properties = {
-            Octopus.Action.GitRepository.Source = "External"
+            Octopus.Action.GitRepository.FilePathFilters = "deployment.yaml"
+            Octopus.Action.GitRepository.Source = "Project"
             Octopus.Action.Kubernetes.DeploymentTimeout = "180"
             Octopus.Action.Kubernetes.ResourceStatusCheck = "True"
-            Octopus.Action.KubernetesContainers.CustomResourceYamlFileName = "manifests/octopub-frontend.yaml"
+            Octopus.Action.KubernetesContainers.CustomResourceYamlFileName = "deployment.yaml"
             Octopus.Action.KubernetesContainers.Namespace = "#{Project.Cluster.Namespace}"
             Octopus.Action.Package.JsonConfigurationVariablesTargets = "**/*.{yml,yaml}"
+            Octopus.Action.RunOnServer = "false"
             Octopus.Action.Script.ScriptSource = "GitRepository"
         }
         worker_pool_variable = ""
 
-        git_dependencies {
-            default_branch = "main"
-            file_path_filters = ["manifests/octopub-frontend.yaml"]
-            git_credential_id = "GitCredentials-922"
-            git_credential_type = "Library"
-            repository_uri = "https://github.com/OctopusSolutionsEngineering/Octopub.git"
+        packages "octopub-frontend" {
+            acquisition_location = "NotAcquired"
+            feed = "docker-hub"
+            package_id = "octopussamples/octopub-frontend"
+            properties = {
+                Extract = "False"
+                Purpose = "DockerImageReference"
+                SelectionMode = "immediate"
+            }
         }
     }
 }
@@ -72,23 +77,17 @@ step "deploy-frontend-service" {
     action {
         action_type = "Octopus.KubernetesDeployRawYaml"
         properties = {
-            Octopus.Action.GitRepository.Source = "External"
+            Octopus.Action.GitRepository.FilePathFilters = "service.yaml"
+            Octopus.Action.GitRepository.Source = "Project"
             Octopus.Action.Kubernetes.DeploymentTimeout = "180"
             Octopus.Action.Kubernetes.ResourceStatusCheck = "True"
-            Octopus.Action.KubernetesContainers.CustomResourceYamlFileName = "manifests/octopub-frontend-service.yaml"
+            Octopus.Action.KubernetesContainers.CustomResourceYamlFileName = "service.yaml"
             Octopus.Action.KubernetesContainers.Namespace = "#{Project.Cluster.Namespace}"
             Octopus.Action.Package.JsonConfigurationVariablesTargets = "**/*.{yml,yaml}"
+            Octopus.Action.RunOnServer = "false"
             Octopus.Action.Script.ScriptSource = "GitRepository"
         }
         worker_pool_variable = ""
-
-        git_dependencies {
-            default_branch = "main"
-            file_path_filters = ["manifests/octopub-frontend-service.yaml"]
-            git_credential_id = "GitCredentials-922"
-            git_credential_type = "Library"
-            repository_uri = "https://github.com/OctopusSolutionsEngineering/Octopub.git"
-        }
     }
 }
 
@@ -101,22 +100,16 @@ step "deploy-ingress" {
     action {
         action_type = "Octopus.KubernetesDeployRawYaml"
         properties = {
-            Octopus.Action.GitRepository.Source = "External"
+            Octopus.Action.GitRepository.FilePathFilters = "ingress.yaml"
+            Octopus.Action.GitRepository.Source = "Project"
             Octopus.Action.Kubernetes.DeploymentTimeout = "180"
             Octopus.Action.Kubernetes.ResourceStatusCheck = "True"
-            Octopus.Action.KubernetesContainers.CustomResourceYamlFileName = "manifests/octopub-ingress.yaml"
+            Octopus.Action.KubernetesContainers.CustomResourceYamlFileName = "ingress.yaml"
             Octopus.Action.KubernetesContainers.Namespace = "#{Project.Cluster.Namespace}"
             Octopus.Action.Package.JsonConfigurationVariablesTargets = "**/*.{yml,yaml}"
+            Octopus.Action.RunOnServer = "false"
             Octopus.Action.Script.ScriptSource = "GitRepository"
         }
         worker_pool_variable = ""
-
-        git_dependencies {
-            default_branch = "main"
-            file_path_filters = ["manifests/octopub-ingress.yaml"]
-            git_credential_id = "GitCredentials-922"
-            git_credential_type = "Library"
-            repository_uri = "https://github.com/OctopusSolutionsEngineering/Octopub.git"
-        }
     }
 }
