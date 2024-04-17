@@ -16,6 +16,6 @@ variable "Project.Worker.Pool" {
 
 variable "spec:rules:0:host" {
     value "#{Octopub.Yaml.Host.Name}" {
-        action = ["deploy-ingress"]
+        action = ["deploy-frontend-service-and-ingress"]
     }
 }
