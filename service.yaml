@@ -5,7 +5,7 @@ metadata:
 spec:
   type: ClusterIP
   selector:
-    component: web
+    component: #{Project.Labels.Component}
   ports:
     - port: 8080
       targetPort: 8080

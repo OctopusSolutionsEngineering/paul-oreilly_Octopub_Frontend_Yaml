@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: octopub-frontend-deployment
+  name: #{Project.Deployment.Name}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      component: web
+      component: #{Project.Labels.Component}
   template:
     metadata:
       labels:
-        component: web
+        component: #{Project.Labels.Component}
     spec:
       containers:
         - name: web
