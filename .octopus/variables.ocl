@@ -1,9 +1,3 @@
-variable "Octopus.Azure.Account" {
-    type = "AzureAccount"
-
-    value "octopub-yaml" {}
-}
-
 variable "Project.Container.Tag" {
     value "#{Octopus.Action.Package[octopub-frontend].PackageVersion}" {}
 }
@@ -18,4 +12,10 @@ variable "spec:rules:0:host" {
     value "#{Octopub.Yaml.Host.Name}" {
         action = ["deploy-frontend-service-and-ingress"]
     }
+}
+
+variable "Octopus.Azure.Account" {
+    type = "AzureAccount"
+
+    value "demo-octopus-app" {}
 }
